@@ -1,0 +1,594 @@
+/* ==========================================================================
+   JAMES CARTER – PORTFOLIO STYLES
+   --------------------------------------------------------------------------
+   TABLE OF CONTENTS
+    1. Theme colours (change the look of the whole site here)
+    2. Base / reset
+    3. Layout helpers
+    4. Buttons
+    5. Header & navigation
+    6. Hero (top section)
+    7. Section titles
+    8. About me
+    9. Services
+   10. Featured projects (cards)
+   11. Project popup (gallery)
+   12. "Let's work together" banner
+   13. Contact form
+   14. Footer
+   15. Responsive (tablet & phone)
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. THEME COLOURS
+   Change a colour here and it updates everywhere it is used.
+   ========================================================================== */
+:root {
+  --bg:    #070d1a;                   /* page background (deep navy)    */
+  --panel: rgba(255, 255, 255, .04);  /* card / glass background        */
+  --line:  rgba(120, 160, 255, .16);  /* thin borders                   */
+  --blue:  #2b7fff;                   /* main neon blue (buttons, bars) */
+  --blue2: #4da3ff;                   /* lighter blue (links, icons)    */
+  --text:  #f4f7ff;                   /* main text (white)              */
+  --mute:  #a7b3cc;                   /* soft grey text                 */
+
+  /* keeps content clear of phone notches */
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #070d1a; }
+}
+
+
+/* ==========================================================================
+   2. BASE / RESET
+   ========================================================================== */
+* { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;                              /* smooth jump to sections */
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 400 15px/1.6 Inter, system-ui, sans-serif;      /* size / line-height / font */
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* visible outline when using the keyboard (accessibility) */
+:focus-visible { outline: 2px solid var(--blue2); outline-offset: 3px; }
+
+
+/* ==========================================================================
+   3. LAYOUT HELPERS
+   ========================================================================== */
+/* centres content and limits its width */
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+section { padding: 56px 0; }
+
+.center { text-align: center; }
+
+/* small blue line under section titles */
+.bar { width: 36px; height: 2px; background: var(--blue); margin: 0 auto; }
+
+/* glass-style box used for cards */
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+}
+
+/* glowing blue icons (inline SVG or <img class="ico">) */
+.ico {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  fill: none;
+  stroke: var(--blue2);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 6px rgba(43, 127, 255, .7));
+}
+
+
+/* ==========================================================================
+   4. BUTTONS
+   <a class="btn">  = solid blue      <a class="btn ghost"> = see-through
+   ========================================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 22px;
+  border-radius: 6px;
+  border: 1px solid var(--blue);
+  background: var(--blue);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s, box-shadow .2s;
+}
+.btn:hover { background: #4a94ff; box-shadow: 0 0 22px rgba(43, 127, 255, .55); }
+
+.btn.ghost {
+  background: rgba(255, 255, 255, .04);
+  border-color: var(--line);
+  backdrop-filter: blur(8px);
+}
+
+/* row of buttons (hero and popup) */
+.cta { display: flex; flex-wrap: wrap; gap: 12px; }
+
+
+/* ==========================================================================
+   5. HEADER & NAVIGATION
+   ========================================================================== */
+/* sits on top of the hero image */
+header { position: absolute; inset: 0 0 auto; z-index: 5; }
+
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 0;
+}
+
+/* "James Carter / FULL STACK DEVELOPER" */
+.logo { font-size: 20px; font-weight: 700; line-height: 1.1; }
+.logo b { color: var(--blue2); }
+.logo small {
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+/* menu links */
+nav ul {
+  display: flex;
+  gap: 28px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  font-weight: 500;
+}
+nav ul a { padding-bottom: 6px; }
+nav ul a:hover,
+nav ul a.on { border-bottom: 2px solid var(--blue); }   /* .on is added by script.js */
+
+
+/* ==========================================================================
+   6. HERO (TOP SECTION)
+   ========================================================================== */
+.hero {
+  position: relative;
+  min-height: 620px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #0a2a55 0, #10325a 38%, #0a1f3c 70%, var(--bg) 100%);
+}
+
+/* background layers (all behind the text) */
+.hero svg.bg { position: absolute; inset: 0; width: 100%; height: 100%; }   /* drawn mountains (fallback) */
+.hero img.herobg {                                                          /* your background photo      */
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.herofade {                                                                 /* darkens left side + bottom */
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(90deg, rgba(7, 13, 26, .7), rgba(7, 13, 26, .05) 65%),
+    linear-gradient(180deg, transparent 65%, var(--bg));
+}
+
+/* two columns: text on the left, your photo on the right */
+.hero .wrap {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  align-items: end;
+  min-height: 620px;
+  padding-top: 120px;
+}
+
+/* left column text */
+.copy { padding-bottom: 70px; }
+.hi { color: var(--blue2); font-weight: 500; }                              /* "Hello, I'm" */
+
+h1 { margin: 6px 0 16px; font-size: clamp(38px, 6vw, 56px); font-weight: 700; line-height: 1.08; }
+h1 span { display: block; font-size: .78em; font-weight: 600; }             /* "Full Stack Developer" */
+
+.copy p { max-width: 340px; margin: 0 0 26px; color: #dbe5fa; }
+
+/* "Trusted by companies" */
+.trust { margin-top: 34px; font-size: 11px; color: var(--mute); }
+.logos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 26px;
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #dfe8fb;
+}
+
+/* your photo – sits on the right, like the design.
+   Change the size with the width below (bigger number = bigger photo) */
+.person {
+  position: relative;
+  align-self: end;
+  justify-self: end;                    /* pushes the photo to the right side */
+  width: min(400px, 100%);
+  aspect-ratio: 330 / 420;              /* shape of the placeholder figure */
+}
+.person svg { display: block; width: 100%; height: 100%; }                  /* placeholder figure */
+.person img {                                                               /* your real photo    */
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: contain;                  /* shows the whole photo; use "cover" to fill the box */
+  object-position: bottom center;       /* photo stands on the bottom edge of the hero */
+  -webkit-mask-image: linear-gradient(#000 85%, transparent);               /* fades the bottom edge */
+  mask-image: linear-gradient(#000 85%, transparent);
+}
+.person.has-photo svg { visibility: hidden; }                               /* hide placeholder once photo loads */
+
+
+/* ==========================================================================
+   7. SECTION TITLES
+   ========================================================================== */
+/* small blue label above a heading, e.g. "ABOUT ME" */
+.eyebrow {
+  margin: 0 0 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--blue2);
+}
+
+h2 { margin: 0 0 14px; font-size: 26px; font-weight: 700; line-height: 1.2; }
+
+
+/* ==========================================================================
+   8. ABOUT ME
+   ========================================================================== */
+.about {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;      /* text | contact card */
+  gap: 48px;
+  align-items: start;
+}
+.about p { max-width: 420px; color: var(--mute); }
+
+/* "5+ years of experience" ticks */
+.facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 24px;
+  margin: 22px 0;
+  font-size: 13px;
+  color: var(--text);
+}
+.facts div::before { content: "✓"; margin-right: 8px; color: var(--blue2); }
+
+/* contact details card (Location, Email, Phone, Languages) */
+.contact { padding: 8px 24px; }
+.contact div {
+  display: flex;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+}
+.contact div:last-child { border: 0; }
+.contact b    { display: block; font-weight: 600; }
+.contact span { color: var(--mute); }
+
+
+/* ==========================================================================
+   9. SERVICES
+   ========================================================================== */
+.grid4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);   /* four boxes in a row */
+  gap: 16px;
+  margin-top: 32px;
+}
+.svc { padding: 22px; text-align: left; }
+.svc h3 { margin: 14px 0 6px; font-size: 14px; }
+.svc p  { margin: 0; font-size: 12.5px; color: var(--mute); }
+
+
+/* ==========================================================================
+   10. FEATURED PROJECTS (CARDS)
+   ========================================================================== */
+/* "FEATURED PROJECTS ........ View all projects" */
+.head { display: flex; justify-content: space-between; align-items: baseline; }
+.head a { font-size: 13px; color: var(--blue2); }
+
+.grid3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);   /* three cards in a row */
+  gap: 16px;
+  margin-top: 16px;
+}
+
+/* the card itself */
+.proj {
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform .2s, border-color .2s, box-shadow .2s;
+}
+.proj:hover,
+.proj:focus-visible {                       /* lifts and glows on hover */
+  transform: translateY(-3px);
+  border-color: var(--blue);
+  box-shadow: 0 0 24px rgba(43, 127, 255, .25);
+}
+
+/* cover picture area */
+/* cover picture area: keeps a 16:10 shape on every screen size,
+   so the image scales with the card instead of being squashed */
+.proj .shot {
+  position: relative;
+  aspect-ratio: 16 / 10;       /* change to 16 / 9 for a flatter cover */
+  overflow: hidden;
+  background: #0d1a33;
+}
+.pimg {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;           /* fills the box, no stretching (edges may be trimmed) */
+  object-position: top center; /* trims from the bottom, so the top of a website screenshot stays visible */
+}
+
+/* title + tech stack under the picture */
+.proj h3 { margin: 12px 16px 0; font-size: 14px; }
+.proj p  { margin: 2px 16px 10px; font-size: 12px; color: var(--blue2); }
+
+/* "Visit site" link at the bottom of each card */
+.visit {
+  display: inline-block;
+  margin: 0 16px 16px;
+  padding: 7px 14px;
+  border-radius: 6px;
+  background: var(--blue);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  transition: background .2s, box-shadow .2s;
+}
+.visit:hover { background: #4a94ff; box-shadow: 0 0 16px rgba(43, 127, 255, .55); }
+
+/* hidden details (description, features, gallery) – shown only inside the popup */
+.pdetails { display: none; }
+
+
+/* ==========================================================================
+   11. PROJECT POPUP (opens when a card is clicked)
+   ========================================================================== */
+dialog {
+  width: min(600px, 92vw);               /* popup width – make smaller or bigger here */
+  max-height: 88vh;
+  padding: 0;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #0b1426;
+  color: var(--text);
+}
+dialog::backdrop { background: rgba(3, 7, 16, .75); backdrop-filter: blur(4px); }   /* dark area behind popup */
+
+/* close (×) button */
+.x {
+  position: absolute; right: 10px; top: 8px; z-index: 3;
+  width: 34px; height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: rgba(7, 13, 26, .7);
+  color: #fff;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* big image box – fixed size, the picture is fitted inside it */
+.pm-img {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: min(300px, 42vh);              /* popup image height – change here */
+  overflow: hidden;                      /* stops tall screenshots spilling out */
+  background: #060b17;                   /* shown around the picture and if it is missing */
+  color: var(--mute);
+  font-size: 13px;
+}
+.pm-img img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: contain;                   /* shows the WHOLE image; use "cover" to fill the box instead */
+}
+
+/* previous / next arrows */
+.nav {
+  position: absolute; top: 50%; z-index: 2;
+  transform: translateY(-50%);
+  width: 38px; height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: rgba(7, 13, 26, .7);
+  color: #fff;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+}
+.nav:hover { background: var(--blue); }
+.prev { left: 10px; }
+.next { right: 10px; }
+
+/* "1 / 3" counter */
+#pm-count {
+  position: absolute; left: 12px; bottom: 10px; z-index: 2;
+  padding: 3px 9px;
+  border-radius: 20px;
+  background: rgba(7, 13, 26, .7);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* small thumbnails under the big image */
+#pm-thumbs { display: flex; gap: 8px; padding: 12px 24px 0; overflow-x: auto; }
+#pm-thumbs button {
+  flex: none;
+  width: 72px; height: 48px;
+  padding: 0;
+  overflow: hidden;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  background: #10223f;
+  opacity: .6;
+  cursor: pointer;
+}
+#pm-thumbs button.on { border-color: var(--blue); opacity: 1; }      /* the image being shown */
+#pm-thumbs img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* caption under thumbnails */
+.cap { min-height: 1.2em; margin: 8px 24px 0; font-size: 12.5px; color: var(--mute); }
+
+/* text part of the popup */
+.pm-body { padding: 24px; }
+.pm-body h3 { margin: 0 0 8px; font-size: 22px; }
+.pm-body p  { color: var(--mute); }
+.pm-body ul { margin: 12px 0 20px; padding-left: 18px; font-size: 13.5px; color: var(--text); }
+
+
+/* ==========================================================================
+   12. "LET'S WORK TOGETHER" BANNER
+   ========================================================================== */
+.cta-band {
+  position: relative;
+  overflow: hidden;
+  padding: 46px 24px;
+  text-align: center;
+  background:                                        /* fallback if no skyline photo */
+    linear-gradient(180deg, rgba(7, 13, 26, .55), rgba(7, 13, 26, .9)),
+    linear-gradient(120deg, #1a3566, #2a2f66 60%, #0d1a33);
+}
+.cta-band .bandbg {                                  /* skyline photo behind the text */
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: .4;
+}
+.cta-band > *:not(img) { position: relative; }       /* keeps text above the photo */
+.cta-band p { max-width: 340px; margin: 0 auto 18px; font-size: 13px; color: #cdd8ef; }
+
+
+/* ==========================================================================
+   13. CONTACT FORM
+   ========================================================================== */
+.cform { display: grid; gap: 16px; max-width: 640px; margin: 32px auto 0; padding: 26px; }
+.cform .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }   /* name | email */
+.cform label { display: grid; gap: 6px; font-size: 13px; font-weight: 500; }
+
+/* input boxes */
+.cform input,
+.cform textarea {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, .05);
+  color: var(--text);
+  font: inherit;
+}
+.cform input:focus,
+.cform textarea:focus {                              /* blue glow when typing */
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(43, 127, 255, .25);
+}
+.cform .invalid { border-color: #ff6b6b; }           /* red border if a field is empty/wrong */
+
+.cform .btn { justify-self: start; }
+.cform .btn[disabled] { opacity: .6; cursor: wait; } /* while the message is sending */
+
+/* hidden spam trap – real people never see this */
+.hp { position: absolute; left: -9999px; width: 0; height: 0; opacity: 0; }
+
+/* "Thanks!" / error message */
+#cstatus { min-height: 1.2em; margin: 0; font-size: 13px; }
+#cstatus.ok  { color: #2bd38a; }
+#cstatus.err { color: #ff8a8a; }
+
+
+/* ==========================================================================
+   14. FOOTER
+   ========================================================================== */
+footer { border-top: 1px solid var(--line); font-size: 12px; color: var(--mute); }
+footer .wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 18px;
+  padding-bottom: 18px;
+}
+
+/* social icon squares */
+.soc { display: flex; gap: 10px; }
+.soc a {
+  display: grid;
+  place-items: center;
+  width: 38px; height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--text);
+  transition: background .2s, border-color .2s, box-shadow .2s;
+}
+.soc svg { width: 19px; height: 19px; fill: currentColor; }      /* the logo */
+.soc a:hover { background: #0a66c2; border-color: #0a66c2; }     /* LinkedIn blue on hover */
+.soc a.wa:hover { background: #25d366; border-color: #25d366; }  /* WhatsApp green on hover */
+
+
+/* ==========================================================================
+   15. RESPONSIVE (keep these at the bottom so they override the rules above)
+   ========================================================================== */
+/* tablets and phones */
+@media (max-width: 860px) {
+  nav ul { display: none; }                          /* hide menu links          */
+  .hero .wrap,
+  .about { grid-template-columns: 1fr; }             /* stack into one column    */
+  .copy { padding-bottom: 20px; }
+  .person { width: min(300px, 80%); justify-self: center; }                          /* smaller photo on phones  */
+  .grid4 { grid-template-columns: 1fr 1fr; }         /* services: 2 per row      */
+  .grid3 { grid-template-columns: 1fr; }             /* projects: 1 per row      */
+}
+
+/* small phones */
+@media (max-width: 600px) {
+  .cform .row { grid-template-columns: 1fr; }        /* name and email stack     */
+}
+@media (max-width: 480px) {
+  .grid4 { grid-template-columns: 1fr; }             /* services: 1 per row      */
+}
